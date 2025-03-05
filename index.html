@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>港式台牌聽牌計算器</title>
+    <!-- AdSense 驗證代碼 -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3048409218107621"
+            crossorigin="anonymous"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -107,6 +110,12 @@
             background-color: #fff;
             border-radius: 5px;
             text-align: left;
+        }
+        .tile-wrapper {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -221,11 +230,24 @@
         <button onclick="resetTiles()">重置</button>
         
         <div id="result"></div>
+
+        <!-- AdSense 廣告單元 -->
+        <div style="text-align: center; margin-top: 20px;">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3048409218107621"
+                    crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                 style="display:block;width:728px;height:90px"
+                 data-ad-client="ca-pub-3048409218107621"
+                 data-ad-slot="xxxxxxxxxx"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
 
     <script>
-        let fixedTiles = {}; // 已固定的牌（碰或上）
-        let handTiles = {};  // 手牌
+        let fixedTiles = {};
+        let handTiles = {};
         const maxTiles = 16;
         const maxPerTile = 4;
 
@@ -236,7 +258,6 @@
             'east': '東', 'south': '南', 'west': '西', 'north': '北', 'red': '中', 'green': '發', 'white': '白', 'joker': '百搭'
         };
 
-        // 固定牌選擇區的事件綁定
         document.querySelectorAll('#fixed-tiles-input .tile').forEach(tile => {
             tile.addEventListener('click', function() {
                 const value = this.dataset.value;
@@ -265,7 +286,6 @@
             });
         });
 
-        // 手牌選擇區的事件綁定
         document.querySelectorAll('#hand-tiles-input .tile').forEach(tile => {
             tile.addEventListener('click', function() {
                 const value = this.dataset.value;
@@ -426,9 +446,7 @@
                 .join(', ') + 
                 '<br>聽牌: ';
             
-            if (tingResult.isAny) {
-                resultText += '任意牌';
-            } else if (tingResult.tiles.size > 0) {
+            if (tingResult.tiles.size > 0) {
                 resultText += Array.from(tingResult.tiles).map(tile => tileNames[tile]).join(', ');
             } else {
                 resultText += '無聽牌';
@@ -450,35 +468,30 @@
             let jokerCount = handCounts['joker'] || 0;
             delete handCounts['joker'];
 
-            if (jokerCount >= 2) {
-                for (let tile in handCounts) {
-                    if (handCounts[tile] >= 2) {
-                        let tempHand = [...hand];
-                        if (canWin(fixed, tempHand.concat('joker'), jokers)) {
-                            return { isAny: true, tiles: new Set() };
-                        }
-                    }
-                }
-            }
-
             suits.forEach(suit => {
                 for (let i = 1; i <= 9; i++) {
                     let testTile = `${i}${suit}`;
-                    if (canWin(fixed, [...hand, testTile], jokers)) {
-                        tingTiles.add(testTile);
+                    if ((fixedTiles[testTile] || 0) + (handTiles[testTile] || 0) < maxPerTile) {
+                        if (canWin(fixed, [...hand, testTile], jokers)) {
+                            tingTiles.add(testTile);
+                        }
                     }
                 }
             });
             honors.forEach(honor => {
-                if (canWin(fixed, [...hand, honor], jokers)) {
-                    tingTiles.add(honor);
+                if ((fixedTiles[honor] || 0) + (handTiles[honor] || 0) < maxPerTile) {
+                    if (canWin(fixed, [...hand, honor], jokers)) {
+                        tingTiles.add(honor);
+                    }
                 }
             });
-            if (canWin(fixed, [...hand, 'joker'], jokers)) {
-                tingTiles.add('joker');
+            if ((fixedTiles['joker'] || 0) + (handTiles['joker'] || 0) < maxPerTile) {
+                if (canWin(fixed, [...hand, 'joker'], jokers)) {
+                    tingTiles.add('joker');
+                }
             }
 
-            return { isAny: false, tiles: tingTiles };
+            return { tiles: tingTiles };
         }
 
         function canWin(fixed, hand, jokers) {
@@ -523,42 +536,38 @@
 
         function checkStandardWin(counts, jokers, fixedGroups) {
             let totalTiles = Object.values(counts).reduce((sum, c) => sum + c, 0);
+            let remainingGroups = 5 - fixedGroups;
 
             if (fixedGroups === 5) {
                 if (totalTiles + jokers === 2) {
                     for (let tile in counts) {
-                        if (counts[tile] === 2 || (counts[tile] === 1 && jokers >= 1)) {
+                        if (counts[tile] === 2 || (counts[tile] === 1 && jokers >= 1) || (counts[tile] === 0 && jokers >= 2)) {
                             return true;
                         }
                     }
-                    if (jokers >= 2) return true;
+                    return false;
                 }
                 return false;
             }
 
-            if (totalTiles + jokers < 5) return false;
+            if (totalTiles + jokers < 3 * remainingGroups) return false;
 
-            if (jokers >= 2) {
-                for (let pairTile in counts) {
-                    if (counts[pairTile] >= 2) {
-                        let tempCounts = { ...counts };
-                        tempCounts[pairTile] -= 2;
-                        if (tempCounts[pairTile] === 0) delete tempCounts[pairTile];
-                        if (decompose(tempCounts, jokers, fixedGroups)) return true;
-                    }
-                }
-                if (jokers >= 2 && totalTiles + jokers - 2 >= 3 * (5 - fixedGroups)) return true;
-            }
-
-            for (let pairTile in counts) {
-                if (counts[pairTile] >= 2 || (counts[pairTile] === 1 && jokers >= 1)) {
+            let allTiles = Object.keys(counts);
+            allTiles.push(''); // 用百搭做將的情況
+            for (let pairTile of allTiles) {
+                if (pairTile === '' && jokers < 2) continue;
+                if (pairTile !== '' && counts[pairTile] >= 2 || (counts[pairTile] === 1 && jokers >= 1) || (counts[pairTile] === 0 && jokers >= 2)) {
                     let tempCounts = { ...counts };
                     let tempJokers = jokers;
-                    if (tempCounts[pairTile] >= 2) {
-                        tempCounts[pairTile] -= 2;
+                    if (pairTile !== '') {
+                        if (tempCounts[pairTile] >= 2) {
+                            tempCounts[pairTile] -= 2;
+                        } else if (tempCounts[pairTile] === 1) {
+                            tempCounts[pairTile]--;
+                            tempJokers--;
+                        }
                     } else {
-                        tempCounts[pairTile]--;
-                        tempJokers--;
+                        tempJokers -= 2;
                     }
                     if (tempCounts[pairTile] === 0) delete tempCounts[pairTile];
 
@@ -586,10 +595,11 @@
             if (totalTiles + jokers < 3 * remainingGroups) return false;
 
             for (let suit in suits) {
-                let suitResult = decomposeSuit(suits[suit], jokers, remainingGroups);
+                let suitResult = decomposeSuit(suits[suit], jokers);
                 if (!suitResult.success) return false;
                 jokers -= suitResult.jokersUsed;
                 remainingGroups -= suitResult.groups;
+                if (remainingGroups < 0 || jokers < 0) return false;
             }
 
             for (let honor in honors) {
@@ -615,7 +625,7 @@
             return remainingGroups <= 0 && jokers >= 0;
         }
 
-        function decomposeSuit(suitCounts, jokers, remainingGroups) {
+        function decomposeSuit(suitCounts, jokers) {
             let tiles = Array(9).fill(0);
             for (let i = 1; i <= 9; i++) {
                 tiles[i-1] = suitCounts[i] || 0;
@@ -623,56 +633,45 @@
 
             let groups = 0;
             let jokersUsed = 0;
-            let i = 0;
-            while (i < 9) {
-                if (tiles[i] === 0) {
-                    i++;
-                    continue;
-                }
-                if (tiles[i] >= 3) {
+
+            // 先處理刻子
+            for (let i = 0; i < 9; i++) {
+                while (tiles[i] >= 3) {
                     tiles[i] -= 3;
                     groups++;
-                    continue;
                 }
-                if (i <= 6 && tiles[i] > 0 && tiles[i+1] > 0 && tiles[i+2] > 0) {
+            }
+
+            // 再處理順子
+            for (let i = 0; i < 7; i++) {
+                while (tiles[i] > 0 && tiles[i+1] > 0 && tiles[i+2] > 0) {
                     tiles[i]--;
                     tiles[i+1]--;
                     tiles[i+2]--;
                     groups++;
-                    continue;
                 }
-                if (jokers > 0) {
-                    if (tiles[i] === 2 && jokers >= 1) {
-                        tiles[i] -= 2;
-                        jokers--;
-                        jokersUsed++;
-                        groups++;
-                        continue;
-                    }
-                    if (i <= 7 && tiles[i] > 0 && tiles[i+1] > 0 && jokers >= 1) {
-                        tiles[i]--;
-                        tiles[i+1]--;
-                        jokers--;
-                        jokersUsed++;
-                        groups++;
-                        continue;
-                    }
-                    if (i <= 6 && tiles[i] > 0 && jokers >= 2) {
-                        tiles[i]--;
-                        jokers -= 2;
-                        jokersUsed += 2;
-                        groups++;
-                        continue;
-                    }
-                    if (tiles[i] === 1 && jokers >= 2) {
-                        tiles[i]--;
-                        jokers -= 2;
-                        jokersUsed += 2;
-                        groups++;
-                        continue;
-                    }
+            }
+
+            // 用百搭補順子或刻子
+            for (let i = 0; i < 9; i++) {
+                if (tiles[i] === 0) continue;
+                if (tiles[i] === 2 && jokers >= 1) {
+                    tiles[i] -= 2;
+                    jokers--;
+                    jokersUsed++;
+                    groups++;
+                } else if (i <= 7 && tiles[i] > 0 && tiles[i+1] > 0 && jokers >= 1) {
+                    tiles[i]--;
+                    tiles[i+1]--;
+                    jokers--;
+                    jokersUsed++;
+                    groups++;
+                } else if (tiles[i] === 1 && jokers >= 2) {
+                    tiles[i]--;
+                    jokers -= 2;
+                    jokersUsed += 2;
+                    groups++;
                 }
-                break;
             }
 
             let remainingTiles = tiles.reduce((sum, c) => sum + c, 0);
