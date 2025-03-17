@@ -84,6 +84,7 @@
             font-weight: bold;
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
+            touch-action: manipulation;
         }
         .tile:hover {
             transform: translateY(-5px);
@@ -127,7 +128,14 @@
             border-radius: 10px;
             padding: 15px;
         }
-        #fixed-area, #hand-area, #fan-fixed-area, #fan-hand-area {
+        #winning-tile-container {
+            background-color: #fff3e0;
+            border: 2px dashed #ff9800;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        #fixed-area, #hand-area, #fan-fixed-area, #fan-hand-area, #winning-tile-area {
             margin: 20px 0;
             padding: 20px;
             background-color: #fafafa;
@@ -140,7 +148,10 @@
         #hand-area h3::before, #fan-hand-area h3::before {
             content: '✋ ';
         }
-        #fixed-tiles, #hand-tiles, #fan-fixed-tiles, #fan-hand-tiles {
+        #winning-tile-area h3::before {
+            content: '🏆 ';
+        }
+        #fixed-tiles, #hand-tiles, #fan-fixed-tiles, #fan-hand-tiles, #winning-tile {
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
@@ -148,7 +159,7 @@
             min-height: 70px;
             align-items: center;
         }
-        #fixed-tiles .fixed-tile, #hand-tiles .hand-tile, #fan-fixed-tiles .fixed-tile, #fan-hand-tiles .hand-tile {
+        #fixed-tiles .fixed-tile, #hand-tiles .hand-tile, #fan-fixed-tiles .fixed-tile, #fan-hand-tiles .hand-tile, #winning-tile .winning-tile {
             width: 50px;
             height: 70px;
             border: 1px solid #999;
@@ -161,7 +172,7 @@
             transition: background-color 0.2s;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
         }
-        #fixed-tiles .fixed-tile:hover, #hand-tiles .hand-tile:hover, #fan-fixed-tiles .fixed-tile:hover, #fan-hand-tiles .hand-tile:hover {
+        #fixed-tiles .fixed-tile:hover, #hand-tiles .hand-tile:hover, #fan-fixed-tiles .fixed-tile:hover, #fan-hand-tiles .hand-tile:hover, #winning-tile .winning-tile:hover {
             background-color: #ffcccc;
         }
         button {
@@ -199,12 +210,15 @@
             border-radius: 5px;
             font-size: 16px;
         }
+        input[type="checkbox"] {
+            margin: 10px;
+        }
         #result-position, #result-fan {
             font-size: 18px;
             color: #d32f2f;
         }
         @media (max-width: 600px) {
-            .tile, #fixed-tiles .fixed-tile, #hand-tiles .hand-tile, #fan-fixed-tiles .fixed-tile, #fan-hand-tiles .hand-tile {
+            .tile, #fixed-tiles .fixed-tile, #hand-tiles .hand-tile, #fan-fixed-tiles .fixed-tile, #fan-hand-tiles .hand-tile, #winning-tile .winning-tile {
                 width: 40px;
                 height: 60px;
                 font-size: 14px;
@@ -349,7 +363,7 @@
 
             <!-- 計番工具 -->
             <div id="fan-calculator" class="tab-pane">
-                <p>點擊下方區域的牌放入「已固定的牌」或「你的手牌」，然後選擇胡牌條件 (需14張):</p>
+                <p>點擊下方區域的牌放入「已固定的牌」或「你的手牌」，總共16張，並選擇胡的那張牌及條件:</p>
                 <div id="fan-fixed-tiles-container">
                     <h3>點擊這裡放入已固定的牌</h3>
                     <div class="tiles-container" id="fan-fixed-tiles-input">
@@ -430,6 +444,46 @@
                         <div class="tile-wrapper"><div class="tile" data-value="joker">百搭</div><span class="count-badge" data-count="0"></span></div>
                     </div>
                 </div>
+                <div id="winning-tile-container">
+                    <h3>點擊這裡放入胡的那張牌 (只能選1張)</h3>
+                    <div class="tiles-container" id="winning-tile-input">
+                        <div class="tile-wrapper"><div class="tile" data-value="1w">1萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="2w">2萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="3w">3萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="4w">4萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="5w">5萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="6w">6萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="7w">7萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="8w">8萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="9w">9萬</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="1t">1筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="2t">2筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="3t">3筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="4t">4筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="5t">5筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="6t">6筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="7t">7筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="8t">8筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="9t">9筒</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="1b">1條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="2b">2條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="3b">3條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="4b">4條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="5b">5條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="6b">6條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="7b">7條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="8b">8條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="9b">9條</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="east">東</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="south">南</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="west">西</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="north">北</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="red">中</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="green">發</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="white">白</div><span class="count-badge" data-count="0"></span></div>
+                        <div class="tile-wrapper"><div class="tile" data-value="joker">百搭</div><span class="count-badge" data-count="0"></span></div>
+                    </div>
+                </div>
                 <div id="fan-fixed-area">
                     <h3>已固定的牌 (已選: <span id="fan-fixed-count">0</span> 張)</h3>
                     <div id="fan-fixed-tiles"></div>
@@ -437,6 +491,10 @@
                 <div id="fan-hand-area">
                     <h3>你的手牌 (已選: <span id="fan-hand-count">0</span> 張)</h3>
                     <div id="fan-hand-tiles"></div>
+                </div>
+                <div id="winning-tile-area">
+                    <h3>胡的那張牌 (已選: <span id="winning-tile-count">0</span> 張)</h3>
+                    <div id="winning-tile"></div>
                 </div>
                 <p>胡牌條件:</p>
                 <label><input type="checkbox" id="self-draw"> 自摸 (+1 番)</label><br>
@@ -629,14 +687,15 @@
         // 計番工具邏輯
         let fanFixedTiles = {};
         let fanHandTiles = {};
-        const maxTilesFan = 14;
+        let winningTile = null;
+        const maxTilesFan = 16; // 港式麻將總牌數上限
 
         document.querySelectorAll('#fan-fixed-tiles-input .tile').forEach(tile => {
             tile.addEventListener('click', function() {
                 const value = this.dataset.value;
-                const total = getTotalTiles(fanFixedTiles, fanHandTiles);
-                if (total >= maxTilesFan) return alert('已達14張上限！');
-                const count = (fanFixedTiles[value] || 0) + (fanHandTiles[value] || 0);
+                const total = getTotalTiles(fanFixedTiles, fanHandTiles) + (winningTile ? 1 : 0);
+                if (total >= maxTilesFan) return alert('已達16張上限！');
+                const count = (fanFixedTiles[value] || 0) + (fanHandTiles[value] || 0) + (winningTile === value ? 1 : 0);
                 if (count >= maxPerTile) return alert(`${tileNames[value]} 已選4次！`);
                 fanFixedTiles[value] = (fanFixedTiles[value] || 0) + 1;
                 this.classList.add('selected');
@@ -648,14 +707,29 @@
         document.querySelectorAll('#fan-hand-tiles-input .tile').forEach(tile => {
             tile.addEventListener('click', function() {
                 const value = this.dataset.value;
-                const total = getTotalTiles(fanFixedTiles, fanHandTiles);
-                if (total >= maxTilesFan) return alert('已達14張上限！');
-                const count = (fanFixedTiles[value] || 0) + (fanHandTiles[value] || 0);
+                const total = getTotalTiles(fanFixedTiles, fanHandTiles) + (winningTile ? 1 : 0);
+                if (total >= maxTilesFan) return alert('已達16張上限！');
+                const count = (fanFixedTiles[value] || 0) + (fanHandTiles[value] || 0) + (winningTile === value ? 1 : 0);
                 if (count >= maxPerTile) return alert(`${tileNames[value]} 已選4次！`);
                 fanHandTiles[value] = (fanHandTiles[value] || 0) + 1;
                 this.classList.add('selected');
                 updateTileCount(this, count + 1);
                 updateFanHandTiles();
+            });
+        });
+
+        document.querySelectorAll('#winning-tile-input .tile').forEach(tile => {
+            tile.addEventListener('click', function() {
+                const value = this.dataset.value;
+                const total = getTotalTiles(fanFixedTiles, fanHandTiles);
+                if (winningTile) return alert('只能選1張胡牌！請先移除已有胡牌。');
+                if (total >= maxTilesFan) return alert('已達16張上限！');
+                const count = (fanFixedTiles[value] || 0) + (fanHandTiles[value] || 0);
+                if (count >= maxPerTile) return alert(`${tileNames[value]} 已選4次！`);
+                winningTile = value;
+                this.classList.add('selected');
+                updateTileCount(this, count + 1);
+                updateWinningTile();
             });
         });
 
@@ -673,7 +747,7 @@
                     tileDiv.addEventListener('click', () => {
                         fanFixedTiles[tile]--;
                         if (fanFixedTiles[tile] === 0) delete fanFixedTiles[tile];
-                        updateTileDisplays(fanFixedTiles, fanHandTiles, '#fan-fixed-tiles-input', '#fan-hand-tiles-input');
+                        updateTileDisplaysFan();
                         updateFanFixedTiles();
                     });
                     div.appendChild(tileDiv);
@@ -696,7 +770,7 @@
                     tileDiv.addEventListener('click', () => {
                         fanHandTiles[tile]--;
                         if (fanHandTiles[tile] === 0) delete fanHandTiles[tile];
-                        updateTileDisplays(fanFixedTiles, fanHandTiles, '#fan-fixed-tiles-input', '#fan-hand-tiles-input');
+                        updateTileDisplaysFan();
                         updateFanHandTiles();
                     });
                     div.appendChild(tileDiv);
@@ -705,20 +779,57 @@
             if (total === 0) div.innerHTML = '<p>尚未選擇任何手牌</p>';
         }
 
+        function updateWinningTile() {
+            const div = document.getElementById('winning-tile');
+            div.innerHTML = '';
+            document.getElementById('winning-tile-count').textContent = winningTile ? 1 : 0;
+            if (winningTile) {
+                const tileDiv = document.createElement('div');
+                tileDiv.className = 'winning-tile';
+                tileDiv.textContent = tileNames[winningTile];
+                tileDiv.dataset.value = winningTile;
+                tileDiv.addEventListener('click', () => {
+                    winningTile = null;
+                    updateTileDisplaysFan();
+                    updateWinningTile();
+                });
+                div.appendChild(tileDiv);
+            } else {
+                div.innerHTML = '<p>尚未選擇胡牌</p>';
+            }
+        }
+
+        function updateTileDisplaysFan() {
+            document.querySelectorAll('#fan-fixed-tiles-input .tile, #fan-hand-tiles-input .tile, #winning-tile-input .tile').forEach(tile => {
+                const value = tile.dataset.value;
+                const totalCount = (fanFixedTiles[value] || 0) + (fanHandTiles[value] || 0) + (winningTile === value ? 1 : 0);
+                updateTileCount(tile, totalCount);
+                tile.classList.toggle('selected', totalCount > 0);
+            });
+        }
+
         function resetFanTiles() {
             fanFixedTiles = {};
             fanHandTiles = {};
-            updateTileDisplays(fanFixedTiles, fanHandTiles, '#fan-fixed-tiles-input', '#fan-hand-tiles-input');
+            winningTile = null;
+            updateTileDisplaysFan();
             updateFanFixedTiles();
             updateFanHandTiles();
+            updateWinningTile();
             document.getElementById('result-fan').innerHTML = '';
             document.getElementById('self-draw').checked = false;
         }
 
         function calculateFan() {
-            const total = getTotalTiles(fanFixedTiles, fanHandTiles);
+            const fixedCount = getTotalTiles(fanFixedTiles, {});
+            const handCount = getTotalTiles({}, fanHandTiles);
+            const total = fixedCount + handCount + (winningTile ? 1 : 0);
             if (total !== 14) {
-                document.getElementById('result-fan').innerHTML = '需正好14張牌！';
+                document.getElementById('result-fan').innerHTML = '胡牌需正好14張牌！目前總數: ' + total;
+                return;
+            }
+            if (!winningTile) {
+                document.getElementById('result-fan').innerHTML = '請選擇胡的那張牌！';
                 return;
             }
 
@@ -726,6 +837,7 @@
             for (let [tile, count] of Object.entries(fanHandTiles)) {
                 allTiles[tile] = (allTiles[tile] || 0) + count;
             }
+            allTiles[winningTile] = (allTiles[winningTile] || 0) + 1;
 
             const analysis = analyzeHand(allTiles);
             if (!analysis.canWin) {
@@ -761,6 +873,7 @@
             const resultText = `
                 已固定的牌: ${formatTiles(fanFixedTiles)}<br>
                 你的手牌: ${formatTiles(fanHandTiles)}<br>
+                胡的牌: ${tileNames[winningTile]}<br>
                 牌型分解: ${analysis.isSevenPairs ? '七對子' : `${analysis.chowCount} 順子, ${analysis.pungCount} 刻子, ${analysis.kongCount} 槓子, 1 對子`}<br>
                 總番數: <strong>${fan} 番</strong><br>
                 ${details.length > 0 ? '詳細計算:<br>' + details.join('<br>') : '無加番條件'}
@@ -859,6 +972,7 @@
         updateHandTiles();
         updateFanFixedTiles();
         updateFanHandTiles();
+        updateWinningTile();
     </script>
 </body>
 </html>
