@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <title>港式台牌計數機</title>
+    <style>
+        body {
+            font-family: 'Noto Sans TC', Arial, sans-serif;
+            background-color: #e8f5e9;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            background-image: url('https://via.placeholder.com/1500x1000/2e7d32/ffffff?text=Mahjong+Table');
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1::before {
+            content: '🀄 ';
+            font-size: 1.2em;
+        }
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            padding: 10px 0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .nav-tabs a {
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        .nav-tabs a:hover, .nav-tabs a.active {
+            background-color: #b71c1c;
+        }
+        .nav-tabs a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background-color: #fff;
+        }
+        .tab-content {
+            background: linear-gradient(to bottom, #ffffff, #f5f5f5);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .header-controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .new-game-button, .change-dealer-button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .change-dealer-button {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+        }
+        .new-game-button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #388e3c, #4caf50);
+        }
+        .change-dealer-button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #f57c00, #ff9800);
+        }
+        .wind-display {
+            font-size: 18px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .score-calculator {
+            position: relative;
+            height: 600px;
+            padding: 20px;
+        }
+        .player-box {
+            position: absolute;
+            width: 200px;
+            padding: 15px;
+            background: #fffde7;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .player-box.top { top: 20px; left: 50%; transform: translateX(-50%); } /* 東 */
+        .player-box.right { right: 20px; top: 50%; transform: translateY(-50%); } /* 南 */
+        .player-box.bottom { bottom: 20px; left: 50%; transform: translateX(-50%); } /* 西 */
+        .player-box.left { left: 20px; top: 50%; transform: translateY(-50%); } /* 北 */
+        .player-box input[type="text"] {
+            width: 80%;
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding: 8px;
+            border: 1px solid #d32f2f;
+            border-radius: 5px;
+        }
+        .player-box .score {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d32f2f;
+            margin: 10px 0;
+        }
+        .player-box .direction {
+            font-size: 14px;
+            color: #388e3c;
+            margin-bottom: 5px;
+        }
+        .player-box .dealer {
+            font-size: 12px;
+            color: #ff5722;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .player-box button {
+            margin: 5px;
+            padding: 8px 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            border: none;
+            transition: transform 0.2s;
+        }
+        .player-box button:hover {
+            transform: scale(1.05);
+        }
+        .btn-win { background: #4caf50; }
+        .btn-self-draw { background: #2196f3; }
+        .btn-special { background: #ff9800; }
+        .btn-fake { background: #f44336; }
+        .score-input {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: left;
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        .score-input label {
+            margin-right: 10px;
+        }
+        .score-input input[type="number"],
+        .score-input select {
+            margin: 10px 0;
+            padding: 8px;
+            border: 1px solid #d32f2f;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .score-input button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        .score-input button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+        }
+        .flow-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 15px 30px;
+            font-size: 18px;
+            background: linear-gradient(135deg, #d32f2f, #b71c1c);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .flow-button:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+        }
+        .score-board table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fffde7;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .score-board th, .score-board td {
+            padding: 10px;
+            border: 1px solid #d32f2f;
+            text-align: center;
+        }
+        .score-board th {
+            background: #d32f2f;
+            color: white;
+            font-size: 16px;
+        }
+        .score-board td {
+            font-size: 14px;
+        }
+        @media (max-width: 600px) {
+            .player-box {
+                width: 150px;
+            }
+            .player-box.top, .player-box.bottom { left: 50%; transform: translateX(-50%); }
+            .player-box.left { left: 10px; top: 70%; transform: translateY(-50%); }
+            .player-box.right { right: 10px; top: 30%; transform: translateY(-50%); }
+            .score-input {
+                max-width: 90%;
+            }
+            .nav-tabs, .header-controls {
+                flex-direction: column;
+            }
+            .nav-tabs a {
+                padding: 10px;
+            }
+            .score-board table {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>港式台牌計數機</h1>
+        <div class="header-controls">
+            <button class="new-game-button" onclick="startNewGame()">新牌局</button>
+            <span class="wind-display" id="wind-display">東圈東局</span>
+            <button class="change-dealer-button" onclick="changeDealer()">莊家改動</button>
+        </div>
+        <div class="nav-tabs">
+            <a class="tab-link active" data-tab="calculator">計數機</a>
+            <a class="tab-link" data-tab="score-board">分數版</a>
+        </div>
+
+        <div class="tab-content">
+            <!-- 計數機分頁 -->
+            <div id="calculator" class="tab-pane active">
+                <div class="score-calculator">
+                    <div class="player-box top">
+                        <div class="direction">東</div>
+                        <div class="dealer" id="dealer-top">莊</div>
+                        <input type="text" id="player-top" placeholder="玩家名稱 (東)">
+                        <div class="score" id="score-top">0</div>
+                        <button class="btn-win" onclick="handleWin('top')">食糊</button>
+                        <button class="btn-self-draw" onclick="handleSelfDraw('top')">自摸</button>
+                        <button class="btn-special" onclick="handleSpecial('top')">特別獎罰</button>
+                        <button class="btn-fake" onclick="handleFake('top')">詐糊</button>
+                    </div>
+                    <div class="player-box right">
+                        <div class="direction">南</div>
+                        <div class="dealer" id="dealer-right" style="display:none;">莊</div>
+                        <input type="text" id="player-right" placeholder="玩家名稱 (南)">
+                        <div class="score" id="score-right">0</div>
+                        <button class="btn-win" onclick="handleWin('right')">食糊</button>
+                        <button class="btn-self-draw" onclick="handleSelfDraw('right')">自摸</button>
+                        <button class="btn-special" onclick="handleSpecial('right')">特別獎罰</button>
+                        <button class="btn-fake" onclick="handleFake('right')">詐糊</button>
+                    </div>
+                    <div class="player-box bottom">
+                        <div class="direction">西</div>
+                        <div class="dealer" id="dealer-bottom" style="display:none;">莊</div>
+                        <input type="text" id="player-bottom" placeholder="玩家名稱 (西)">
+                        <div class="score" id="score-bottom">0</div>
+                        <button class="btn-win" onclick="handleWin('bottom')">食糊</button>
+                        <button class="btn-self-draw" onclick="handleSelfDraw('bottom')">自摸</button>
+                        <button class="btn-special" onclick="handleSpecial('bottom')">特別獎罰</button>
+                        <button class="btn-fake" onclick="handleFake('bottom')">詐糊</button>
+                    </div>
+                    <div class="player-box left">
+                        <div class="direction">北</div>
+                        <div class="dealer" id="dealer-left" style="display:none;">莊</div>
+                        <input type="text" id="player-left" placeholder="玩家名稱 (北)">
+                        <div class="score" id="score-left">0</div>
+                        <button class="btn-win" onclick="handleWin('left')">食糊</button>
+                        <button class="btn-self-draw" onclick="handleSelfDraw('left')">自摸</button>
+                        <button class="btn-special" onclick="handleSpecial('left')">特別獎罰</button>
+                        <button class="btn-fake" onclick="handleFake('left')">詐糊</button>
+                    </div>
+                    <button class="flow-button" onclick="handleFlow()">流局</button>
+                    <div class="score-input" id="score-input">
+                        <label>贏家: </label><span id="winner-name"></span><br>
+                        <label>放槍者: </label>
+                        <select id="discarder">
+                            <!-- 動態生成選項 -->
+                        </select><br>
+                        <label>番數: </label>
+                        <input type="number" id="fan" min="0" value="0"><br>
+                        <button onclick="submitScore()">提交</button>
+                        <button onclick="cancelScore()">取消</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分數版分頁 -->
+            <div id="score-board" class="tab-pane">
+                <div class="score-board">
+                    <table id="score-table">
+                        <thead>
+                            <tr>
+                                <th>局數</th>
+                                <th>事件</th>
+                                <th id="player-top-header">玩家 (東)</th>
+                                <th id="player-right-header">玩家 (南)</th>
+                                <th id="player-bottom-header">玩家 (西)</th>
+                                <th id="player-left-header">玩家 (北)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="score-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let scores = { top: 0, right: 0, bottom: 0, left: 0 };
+        let flowCount = 0;
+        let roundCount = 0;
+        let currentWinner = null;
+        const BASE_FAN = 5; // 底番固定為5番
+        let historyRecords = [];
+        let dealer = 'top'; // 初始莊家為東位
+        let wind = { circle: '東圈', round: '東局' }; // 初始計風
+
+        const directions = ['top', 'right', 'bottom', 'left']; // 順時針：東、南、西、北
+        const windCircles = ['東圈', '南圈', '西圈', '北圈'];
+        const windRounds = ['東局', '南局', '西局', '北局'];
+
+        // 分頁切換
+        document.querySelectorAll('.tab-link').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+                if (tab.dataset.tab === 'score-board') updateScoreBoard();
+            });
+        });
+
+        function updateScores() {
+            document.getElementById('score-top').textContent = scores.top;
+            document.getElementById('score-right').textContent = scores.right;
+            document.getElementById('score-bottom').textContent = scores.bottom;
+            document.getElementById('score-left').textContent = scores.left;
+        }
+
+        function getPlayers() {
+            return {
+                top: document.getElementById('player-top').value || '',
+                right: document.getElementById('player-right').value || '',
+                bottom: document.getElementById('player-bottom').value || '',
+                left: document.getElementById('player-left').value || ''
+            };
+        }
+
+        function areAllPlayersNamed() {
+            const players = getPlayers();
+            return players.top && players.right && players.bottom && players.left;
+        }
+
+        function updateDiscarderList() {
+            const players = getPlayers();
+            const discarderSelect = document.getElementById('discarder');
+            discarderSelect.innerHTML = '';
+            const noneOption = document.createElement('option');
+            noneOption.value = 'none';
+            noneOption.textContent = '無（自摸）';
+            discarderSelect.appendChild(noneOption);
+            for (let [key, name] of Object.entries(players)) {
+                if (name) {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = name;
+                    discarderSelect.appendChild(option);
+                }
+            }
+        }
+
+        function updatePlayerHeaders() {
+            const players = getPlayers();
+            document.getElementById('player-top-header').textContent = players.top || '玩家 (東)';
+            document.getElementById('player-right-header').textContent = players.right || '玩家 (南)';
+            document.getElementById('player-bottom-header').textContent = players.bottom || '玩家 (西)';
+            document.getElementById('player-left-header').textContent = players.left || '玩家 (北)';
+        }
+
+        function updateDealerDisplay() {
+            directions.forEach(dir => {
+                document.getElementById(`dealer-${dir}`).style.display = (dir === dealer) ? 'block' : 'none';
+            });
+            document.getElementById('wind-display').textContent = `${wind.circle}${wind.round}`;
+        }
+
+        function shiftDealerAndWind() {
+            const currentIndex = directions.indexOf(dealer);
+            const nextIndex = (currentIndex + 1) % 4;
+            dealer = directions[nextIndex];
+
+            const roundIndex = windRounds.indexOf(wind.round);
+            const circleIndex = windCircles.indexOf(wind.circle);
+            if (roundIndex < 3) {
+                wind.round = windRounds[roundIndex + 1];
+            } else {
+                wind.round = windRounds[0];
+                wind.circle = windCircles[(circleIndex + 1) % 4];
+            }
+            updateDealerDisplay();
+        }
+
+        function showScoreInput(winner) {
+            if (!areAllPlayersNamed()) {
+                alert('請先輸入所有玩家名稱！');
+                return;
+            }
+            currentWinner = winner;
+            const players = getPlayers();
+            document.getElementById('winner-name').textContent = players[winner];
+            updateDiscarderList();
+            document.getElementById('fan').value = 0;
+            document.getElementById('score-input').style.display = 'block';
+        }
+
+        function hideScoreInput() {
+            document.getElementById('score-input').style.display = 'none';
+            currentWinner = null;
+        }
+
+        function handleWin(player) {
+            showScoreInput(player);
+            if (areAllPlayersNamed()) document.getElementById('discarder').style.display = 'block';
+        }
+
+        function handleSelfDraw(player) {
+            showScoreInput(player);
+            if (areAllPlayersNamed()) {
+                document.getElementById('discarder').value = 'none';
+                document.getElementById('discarder').style.display = 'none';
+            }
+        }
+
+        function handleSpecial(player) {
+            if (!areAllPlayersNamed()) {
+                alert('請先輸入所有玩家名稱！');
+                return;
+            }
+            const amount = parseInt(prompt(`請輸入 ${getPlayers()[player]} 的特別獎罰分數（正數加分，負數減分）:`));
+            if (isNaN(amount)) return alert('請輸入有效數字！');
+            scores[player] += amount;
+            updateScores();
+            const record = {
+                round: `特殊${++roundCount}`,
+                event: `特別獎罰: ${getPlayers()[player]} ${amount > 0 ? '+' : ''}${amount}`,
+                changes: { top: 0, right: 0, bottom: 0, left: 0 }
+            };
+            record.changes[player] = amount;
+            historyRecords.push(record);
+        }
+
+        function handleFake(player) {
+            if (!areAllPlayersNamed()) {
+                alert('請先輸入所有玩家名稱！');
+                return;
+            }
+            const penalty = 10;
+            scores[player] -= penalty;
+            const payment = Math.floor(penalty / 3);
+            for (let p in scores) {
+                if (p !== player) scores[p] += payment;
+            }
+            updateScores();
+            const record = {
+                round: `第${++roundCount}局`,
+                event: `詐糊: ${getPlayers()[player]} -${penalty}, 每家 +${payment}`,
+                changes: { top: 0, right: 0, bottom: 0, left: 0 }
+            };
+            record.changes[player] = -penalty;
+            for (let p in scores) {
+                if (p !== player) record.changes[p] = payment;
+            }
+            historyRecords.push(record);
+        }
+
+        function handleFlow() {
+            if (!areAllPlayersNamed()) {
+                alert('請先輸入所有玩家名稱！');
+                return;
+            }
+            flowCount++;
+            const players = getPlayers();
+            const event = `第 ${flowCount} 次流局 - ${players.top}: ${scores.top}, ${players.right}: ${scores.right}, ${players.bottom}: ${scores.bottom}, ${players.left}: ${scores.left}`;
+            historyRecords.push({
+                round: `流局${flowCount}`,
+                event: event,
+                changes: { top: 0, right: 0, bottom: 0, left: 0 }
+            });
+        }
+
+        function submitScore() {
+            const winner = currentWinner;
+            const discarder = document.getElementById('discarder').value;
+            const fan = parseInt(document.getElementById('fan').value) || 0;
+            const players = getPlayers();
+
+            if (fan < 0) return alert('番數不能為負！');
+
+            roundCount++;
+            let totalFan = BASE_FAN + fan;
+            const multiplier = 1; // 移除莊家雙倍
+            const record = {
+                round: `第${roundCount}局`,
+                event: '',
+                changes: { top: 0, right: 0, bottom: 0, left: 0 }
+            };
+
+            if (discarder === 'none') { // 自摸
+                const payment = totalFan * multiplier;
+                for (let p in scores) {
+                    if (p !== winner) {
+                        scores[p] -= payment;
+                        record.changes[p] = -payment;
+                    } else {
+                        scores[p] += payment * 3;
+                        record.changes[p] = payment * 3;
+                    }
+                }
+                record.event = `${players[winner]} 自摸 ${fan} 番, 共 ${totalFan} 番, 每家付 ${payment}, 贏 ${payment * 3}${dealer === winner ? ' (連莊)' : ''}`;
+                if (dealer !== winner) shiftDealerAndWind();
+            } else { // 食糊
+                const discarderPayment = totalFan * 2 * multiplier;
+                scores[discarder] -= discarderPayment;
+                scores[winner] += discarderPayment;
+                record.changes[discarder] = -discarderPayment;
+                record.changes[winner] = discarderPayment;
+                record.event = `${players[winner]} 食糊 ${fan} 番, 共 ${totalFan} 番, ${players[discarder]} 放槍付 ${discarderPayment}${dealer === winner ? ' (連莊)' : ''}`;
+                if (dealer !== winner) shiftDealerAndWind();
+            }
+
+            updateScores();
+            historyRecords.push(record);
+            hideScoreInput();
+        }
+
+        function cancelScore() {
+            hideScoreInput();
+        }
+
+        function startNewGame() {
+            if (confirm('確定開始新牌局？所有數據將重置。')) {
+                scores = { top: 0, right: 0, bottom: 0, left: 0 };
+                flowCount = 0;
+                roundCount = 0;
+                historyRecords = [];
+                dealer = 'top';
+                wind = { circle: '東圈', round: '東局' };
+                document.getElementById('player-top').value = '';
+                document.getElementById('player-right').value = '';
+                document.getElementById('player-bottom').value = '';
+                document.getElementById('player-left').value = '';
+                updateScores();
+                updateDiscarderList();
+                updateScoreBoard();
+                updateDealerDisplay();
+            }
+        }
+
+        function changeDealer() {
+            if (!areAllPlayersNamed()) {
+                alert('請先輸入所有玩家名稱！');
+                return;
+            }
+            const players = getPlayers();
+            const select = document.createElement('select');
+            directions.forEach(dir => {
+                const option = document.createElement('option');
+                option.value = dir;
+                option.textContent = players[dir] || `玩家 (${dir === 'top' ? '東' : dir === 'right' ? '南' : dir === 'bottom' ? '西' : '北'})`;
+                select.appendChild(option);
+            });
+            const promptDiv = document.createElement('div');
+            promptDiv.innerHTML = '請選擇新莊家：<br>';
+            promptDiv.appendChild(select);
+            const okButton = document.createElement('button');
+            okButton.textContent = '確定';
+            okButton.onclick = () => {
+                const newDealer = select.value;
+                dealer = newDealer;
+                updateDealerDisplay();
+                historyRecords.push({
+                    round: `手動${++roundCount}`,
+                    event: `莊家改為 ${players[newDealer]}`,
+                    changes: { top: 0, right: 0, bottom: 0, left: 0 }
+                });
+                updateScoreBoard();
+                document.body.removeChild(promptDiv);
+            };
+            promptDiv.appendChild(document.createElement('br'));
+            promptDiv.appendChild(okButton);
+            promptDiv.style.position = 'fixed';
+            promptDiv.style.top = '50%';
+            promptDiv.style.left = '50%';
+            promptDiv.style.transform = 'translate(-50%, -50%)';
+            promptDiv.style.background = '#fff';
+            promptDiv.style.padding = '20px';
+            promptDiv.style.border = '1px solid #d32f2f';
+            promptDiv.style.borderRadius = '10px';
+            document.body.appendChild(promptDiv);
+        }
+
+        function updateScoreBoard() {
+            const players = getPlayers();
+            updatePlayerHeaders();
+            const tbody = document.getElementById('score-table-body');
+            tbody.innerHTML = '';
+            historyRecords.forEach(record => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${record.round}</td>
+                    <td>${record.event}</td>
+                    <td>${record.changes.top}</td>
+                    <td>${record.changes.right}</td>
+                    <td>${record.changes.bottom}</td>
+                    <td>${record.changes.left}</td>
+                `;
+                tbody.appendChild(row);
+            });
+            const totalRow = document.createElement('tr');
+            totalRow.innerHTML = `
+                <td>總分</td>
+                <td>-</td>
+                <td>${scores.top}</td>
+                <td>${scores.right}</td>
+                <td>${scores.bottom}</td>
+                <td>${scores.left}</td>
+            `;
+            tbody.appendChild(totalRow);
+        }
+
+        // 初始化及監聽玩家名稱輸入
+        updateScores();
+        updateDealerDisplay();
+        document.getElementById('score-input').style.display = 'none';
+        ['top', 'right', 'bottom', 'left'].forEach(pos => {
+            document.getElementById(`player-${pos}`).addEventListener('input', () => {
+                updateDiscarderList();
+                updateScoreBoard();
+            });
+        });
+    </script>
+</body>
+</html>
