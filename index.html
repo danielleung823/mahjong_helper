@@ -1,111 +1,132 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>越南中部 6日行程表</title>
-<style>
-    body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
-    .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-    h1 { color: #1a5276; text-align: center; font-size: 2.5em; margin-bottom: 10px; }
-    .subtitle { text-align: center; color: #7f8c8d; margin-bottom: 40px; }
-    
-    .day-box { border-bottom: 2px solid #eee; padding: 25px 0; }
-    .day-box:last-child { border-bottom: none; }
-    .day-title { font-size: 1.8em; color: #d35400; margin-bottom: 15px; display: flex; align-items: center; }
-    .day-title span { background: #d35400; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.6em; margin-right: 10px; }
-    
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
-    @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-    
-    .img-container { width: 100%; position: relative; }
-    .img-container img { width: 100%; height: 250px; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    .img-caption { font-size: 0.85em; color: #666; margin-top: 5px; text-align: center; }
-    
-    .schedule-item { margin-bottom: 12px; display: flex; }
-    .time-node { min-width: 80px; font-weight: bold; color: #2980b9; }
-    .activity-text { flex: 1; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>越南中部 5/5-5/10 深度之旅</title>
+    <style>
+        :root { --primary: #2c3e50; --accent: #e67e22; --bg: #f8f9fa; }
+        body { font-family: 'Segoe UI', "Microsoft JhengHei", sans-serif; background: var(--bg); margin: 0; padding: 20px; line-height: 1.6; }
+        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        h1 { color: var(--primary); text-align: center; border-bottom: 3px solid var(--accent); padding-bottom: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.95em; }
+        th { background: var(--primary); color: white; padding: 15px; text-align: left; }
+        td { border-bottom: 1px solid #eee; padding: 15px; vertical-align: top; }
+        tr:hover { background: #fdfaf7; }
 
-    .food-tag { background: #e8f6f3; color: #16a085; padding: 2px 8px; border-radius: 4px; font-size: 0.9em; font-weight: bold; }
-    .highlight-card { background: #fdf2e9; border-left: 5px solid #e67e22; padding: 15px; margin-top: 15px; border-radius: 5px; }
-</style>
+        .day-tag { background: var(--accent); color: white; padding: 3px 8px; border-radius: 4px; font-weight: bold; margin-right: 5px; }
+        .meal-box { background: #f0f4f8; padding: 8px; border-radius: 6px; margin-top: 10px; border-left: 4px solid #3498db; }
+        .meal-title { font-weight: bold; color: #2980b9; font-size: 0.9em; }
+        .highlight { color: #c0392b; font-weight: bold; }
+        
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr { display: block; }
+            th { text-align: center; }
+            td { border: none; position: relative; padding-left: 50%; }
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>越南中部 奢華六日遊</h1>
-    <p class="subtitle">5月5日 - 5月10日 | 巴拿山 • 占婆島 • 會安 • 峴港</p>
-
-    <div class="day-box">
-        <div class="day-title"><span>Day 1-2</span> 雲端法式城堡：巴拿山</div>
-        <div class="grid">
-            <div class="schedule">
-                <div class="schedule-item"><div class="time-node">Day 1</div><div class="activity-text">中午抵達峴港，乘纜車上山。入住 <b>Mercure Danang French Village</b>。</div></div>
-                <div class="schedule-item"><div class="time-node">下午</div><div class="activity-text">漫步佛手金橋、參觀百年酒窖。傍晚享受山上法式氛圍。</div></div>
-                <div class="schedule-item"><div class="time-node">Day 2</div><div class="activity-text">晨間搶拍無人金橋。暢玩 Fantasy Park 樂園，挑戰軌道滑車 (Alpine Coaster)。</div></div>
-                <div class="highlight-card">住宿建議：住在山上才能避開每日數以萬計的團客，享受清晨的靜謐。</div>
-            </div>
-            <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1559592442-7e182c3963db?w=800" alt="巴拿山金橋">
-                <p class="img-caption">巴拿山佛手金橋 (Golden Bridge)</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="day-box">
-        <div class="day-title"><span>Day 3-4</span> 藍色奇蹟：占婆島離島體驗</div>
-        <div class="grid">
-            <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800" alt="占婆島浮潛">
-                <p class="img-caption">占婆島清澈海域與浮潛</p>
-            </div>
-            <div class="schedule">
-                <div class="schedule-item"><div class="time-node">Day 3</div><div class="activity-text">由會安碼頭出發。前往 <b>Bai Chong</b> 享受陽光海景，進行深潛或浮潛。</div></div>
-                <div class="schedule-item"><div class="time-node">下午</div><div class="activity-text">參觀海洋生物博物館、品嚐島上野生螃蟹。當晚入住特色島上民宿。</div></div>
-                <div class="schedule-item"><div class="time-node">Day 4</div><div class="activity-text">清晨跟隨漁民出海，或在海灘享受日光浴。下午兩點乘快艇返回會安。</div></div>
-                <div class="food-tag">必食：野生陸蟹、烤海鮮</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="day-box">
-        <div class="day-title"><span>Day 5</span> 速度與浪漫：會安古城活動</div>
-        <div class="grid">
-            <div class="schedule">
-                <div class="schedule-item"><div class="time-node">09:00</div><div class="activity-text"><b>Hoi An E-kart</b> 體驗專業賽道競速快感。</div></div>
-                <div class="schedule-item"><div class="time-node">11:00</div><div class="activity-text"><b>水椰林艇仔</b> (Basket Boat) 體驗，看船夫在水上瘋狂旋轉。</div></div>
-                <div class="schedule-item"><div class="time-node">19:00</div><div class="activity-text"><span class="food-tag">法式料理</span> 前往 <b>The Little Faifo</b> 或 <b>Le Cabanon</b> 享用精緻晚宴。</div></div>
-                <div class="schedule-item"><div class="time-node">21:00</div><div class="activity-text">會安夜間市集，拍攝色彩繽紛的燈籠。</div></div>
-            </div>
-            <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1555620263-73a02c644478?w=800" alt="會安夜景">
-                <p class="img-caption">會安古鎮夜色與水上燈籠</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="day-box">
-        <div class="day-title"><span>Day 6</span> 最美沙灘：美溪海灘</div>
-        <div class="grid">
-            <div class="img-container">
-                <img src="https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?w=800" alt="美溪海灘">
-                <p class="img-caption">峴港美溪海灘 (My Khe Beach)</p>
-            </div>
-            <div class="schedule">
-                <div class="schedule-item"><div class="time-node">上午</div><div class="activity-text">於<b>美溪海灘</b>踏浪，這裡是放鬆心情、享受旅程結尾的最佳地點。</div></div>
-                <div class="schedule-item"><div class="time-node">12:00</div><div class="activity-text"><span class="food-tag">當地美食</span> 享用著名的 <b>Madam Khanh</b> 法式麵包或 <b>Mì Quảng</b> 拌麵。</div></div>
-                <div class="schedule-item"><div class="time-node">下午</div><div class="activity-text">前往機場，結束愉快的越南中部之旅。</div></div>
-            </div>
-        </div>
-    </div>
-
-    <div style="background: #2c3e50; color: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
-        <h3 style="margin-top: 0; color: #f1c40f;">🍽️ 精選餐廳清單</h3>
-        <ul style="list-style: none; padding: 0;">
-            <li style="margin-bottom: 10px;">⭐ <b>The Temptation (峴港)</b> - 當地排名極高的法餐，精緻法蘭西工藝。</li>
-            <li style="margin-bottom: 10px;">⭐ <b>Madam Khanh - The Banh Mi Queen (會安)</b> - 世界上最好吃的越式法包之一。</li>
-            <li style="margin-bottom: 10px;">⭐ <b>Home Hoi An Restaurant</b> - 位於古宅內的高級越南菜，氣氛極佳。</li>
-        </ul>
+    <h1>🇻🇳 越南中部：5/5 - 5/10 深度行程表</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 15%;">日期/主題</th>
+                <th style="width: 45%;">詳細活動安排 (時間建議)</th>
+                <th style="width: 40%;">🍽️ 三餐具體推薦</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="day-tag">5月5日</span><br>抵達 & 峴港藍調</td>
+                <td>
+                    <b>11:40</b> 抵達峴港機場 -> 入住酒店 (美溪海灘附近)<br>
+                    <b>15:00</b> <span class="highlight">美溪海灘 (My Khe Beach)</span> 散步、踩浪<br>
+                    <b>19:00</b> 韓江龍橋夜景 (Dragon Bridge)
+                </td>
+                <td>
+                    <div class="meal-box"><span class="meal-title">午餐:</span> <b>Mì Quảng 1A</b> (道地廣南手打粉)</div>
+                    <div class="meal-box"><span class="meal-title">晚餐:</span> <b>Hải Sản Bé Mặn</b> (超人氣平價海鮮大排檔)</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="day-tag">5月6日</span><br>雲端城堡 (1)</td>
+                <td>
+                    <b>09:00</b> 出發前往 <span class="highlight">巴拿山 (Ba Na Hills)</span><br>
+                    <b>13:00</b> 入住山上 <b>Mercure French Village</b><br>
+                    <b>15:30</b> 避開人潮前往 <b>佛手金橋</b> 拍攝大片<br>
+                    <b>20:00</b> 享受山頂法式古堡的寧靜夜晚
+                </td>
+                <td>
+                    <div class="meal-box"><span class="meal-title">早餐:</span> 酒店內</div>
+                    <div class="meal-box"><span class="meal-title">午餐:</span> 巴拿山園區自助餐 (Arapang)</div>
+                    <div class="meal-box"><span class="meal-title">晚餐:</span> <b>L'Etable</b> (酒店內高級精緻法餐/牛排)</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="day-tag">5月7日</span><br>樂園 & 會安</td>
+                <td>
+                    <b>09:00</b> 暢玩 <b>Fantasy Park</b> 樂園、滑車 (Alpine Coaster)<br>
+                    <b>15:00</b> 下山前往 <span class="highlight">會安古鎮 (Hoi An)</span> 入住<br>
+                    <b>18:30</b> 會安夜市、放水燈、燈籠街拍照
+                </td>
+                <td>
+                    <div class="meal-box"><span class="meal-title">早餐:</span> 酒店自助餐</div>
+                    <div class="meal-box"><span class="meal-title">午餐:</span> 園區內輕食/法式三明治</div>
+                    <div class="meal-box"><span class="meal-title">晚餐:</span> <b>Morning Glory Original</b> (會安必吃：白玫瑰、炸雲吞)</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="day-tag">5月8日</span><br>速度與激戰</td>
+                <td>
+                    <b>10:00</b> <span class="highlight">Hoi An E-kart</span> 體驗卡丁車競速<br>
+                    <b>14:00</b> <b>水椰林艇仔</b> (Bamboo Basket Boat) 旋轉陀螺秀<br>
+                    <b>16:00</b> 會安古宅下午茶、裁縫訂造服裝
+                </td>
+                <td>
+                    <div class="meal-box"><span class="meal-title">早餐:</span> <b>Bánh Mì Phượng</b> (世界知名的越式法包)</div>
+                    <div class="meal-box"><span class="meal-title">午餐:</span> <b>Com Ga Ba Buoi</b> (百年老店會安雞飯)</div>
+                    <div class="meal-box"><span class="meal-title">晚餐:</span> <b>Le Cabanon</b> (河畔法式餐酒館 - 必吃油封鴨)</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="day-tag">5月9日</span><br>原始占婆島</td>
+                <td>
+                    <b>08:30</b> 碼頭乘快艇前往 <span class="highlight">占婆島 (Cham Island)</span><br>
+                    <b>全日</b> 浮潛、看珊瑚礁、海底漫步<br>
+                    <b>16:00</b> 返回會安/峴港酒店休息
+                </td>
+                <td>
+                    <div class="meal-box"><span class="meal-title">早餐:</span> 當地特色 Cao Lau (高樓麵)</div>
+                    <div class="meal-box"><span class="meal-title">午餐:</span> 島上漁民海鮮餐 (野生螃蟹、烤魚)</div>
+                    <div class="meal-box"><span class="meal-title">晚餐:</span> <b>The Temptation</b> (峴港法餐天花板，慶祝最後一晚)</div>
+                </td>
+            </tr>
+            <tr>
+                <td><span class="day-tag">5月10日</span><br>放鬆與歸途</td>
+                <td>
+                    <b>09:00</b> 美溪海灘最後巡禮 或 韓市場買伴手禮<br>
+                    <b>12:00</b> 享用最後美食 -> 前往機場<br>
+                    <b>15:00</b> 離開峴港
+                </td>
+                <td>
+                    <div class="meal-box"><span class="meal-title">早餐:</span> 酒店早餐 / 街頭越式咖啡</div>
+                    <div class="meal-box"><span class="meal-title">午餐:</span> <b>Madam Khanh</b> (法包皇后)</div>
+                    <div class="meal-box"><span class="meal-title">晚餐:</span> (機上或機場簡餐)</div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 25px; font-size: 0.85em; color: #666; border-top: 1px solid #ddd; padding-top: 10px;">
+        💡 <b>溫馨提示：</b><br>
+        1. <b>交通：</b> 峴港市內移動建議使用 <b>Grab</b>，價格透明；前往巴拿山或會安可考慮包車或預約酒店接送。<br>
+        2. <b>預訂：</b> 5月是旅遊旺季，法式餐廳 (The Temptation, Le Cabanon) 建議提前 1-2 天預約位子。<br>
+        3. <b>巴拿山住宿：</b> 山上氣溫比地面低 5-10 度，記得帶一件薄外套。
     </div>
 </div>
 
